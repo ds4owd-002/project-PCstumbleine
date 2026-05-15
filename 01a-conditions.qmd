@@ -1,0 +1,148 @@
+---
+title: "Conditional transformations"
+subtitle: "Practice with mutate() and case_when()"
+author: ""
+format:
+  html:
+    embed-resources: true
+editor: visual
+execute:
+  warning: false
+editor_options:
+  chunk_output_type: console
+---
+
+## Task 1: Load packages
+
+1.  Run the code chunk below to load the required packages.
+
+```{r}
+library(gapminder)
+library(dplyr)
+```
+
+All exercises in this assignment use the `gapminder` data as a starting point.
+
+2.  Run the code chunk that contains `glimpse(gapminder)`.
+
+3.  How many variables are in the data set?
+
+4.  How many observations are in the data set?
+
+5.  What data types are contained in the variables?
+
+```{r}
+glimpse(gapminder)
+```
+
+## Task 2: A first use of `case_when()`
+
+Run the following code chunk and observe the output in the Console. It adds a new column `gdp_group` to `gapminder` that classifies countries as `"low"`, `"middle"`, or `"high"` income based on GDP per capita.
+
+```{r}
+gapminder |>
+  mutate(gdp_group = case_when(
+    gdpPercap < 2000 ~ "low",
+    gdpPercap < 15000 ~ "middle",
+    gdpPercap >= 15000 ~ "high"
+  ))
+```
+
+1.  Read the code out loud, verbally describing what each line does.
+
+2.  Write in your own words what `case_when()` is doing here:
+
+*Your answer here:*
+
+## Task 3: Classify life expectancy
+
+Use `mutate()` and `case_when()` to add a new column called `life_exp_group` to `gapminder` that classifies each row as:
+
+- `"short"` when `lifeExp` is less than 50
+- `"medium"` when `lifeExp` is between 50 and 70 (inclusive of 50, exclusive of 70)
+- `"long"` when `lifeExp` is 70 or greater
+
+```{r}
+
+```
+
+## Task 4: A default category with `TRUE`
+
+Use `mutate()` and `case_when()` to add a new column called `pop_size` to `gapminder` that classifies each country as:
+
+- `"small"` when `pop` is less than 1,000,000
+- `"medium"` when `pop` is less than 50,000,000
+- `"large"` for all remaining rows (use `TRUE ~ "large"` as the last condition)
+
+```{r}
+
+```
+
+1.  What does `TRUE ~ "large"` do? Why is it useful?
+
+*Your answer here:*
+
+## Task 5: Combining multiple conditions
+
+Use `mutate()` and `case_when()` to add a new column called `status` to `gapminder` that classifies each row as:
+
+- `"thriving"` when `lifeExp` is greater than 70 AND `gdpPercap` is greater than 15000
+- `"developing"` when `lifeExp` is greater than 60 AND `gdpPercap` is greater than 2000
+- `"struggling"` for everything else
+
+Tip: use `&` to combine two conditions inside `case_when()`.
+
+```{r}
+
+```
+
+## Task 6: Handling missing values
+
+Run the following code chunk to create a small data frame with some missing values.
+
+```{r}
+practice_df <- tibble::tibble(
+  country = c("A", "B", "C", "D", "E"),
+  score = c(10, NA, 35, 70, NA)
+)
+
+practice_df
+```
+
+Use `mutate()` and `case_when()` to add a new column called `category` to `practice_df` that classifies each row as:
+
+- `"low"` when `score` is less than 30
+- `"high"` when `score` is 30 or greater
+- `"unknown"` when `score` is `NA` (use `is.na(score) ~ "unknown"`)
+
+```{r}
+
+```
+
+1.  What happens to `NA` values if you do *not* include `is.na(score) ~ "unknown"`?
+
+*Your answer here:*
+
+## Task 7: Save your work
+
+In Tasks 3–6 the results appeared in the Console but did not get saved anywhere. Use the assignment operator `<-` to save your favourite version into a new object called `gapminder_classified`.
+
+```{r}
+
+```
+
+1.  What new object appears in your Environment?
+
+2.  Why would we use the assignment operator `<-` to save our results?
+
+## Task 8: Data communication
+
+**In the YAML header (between the three dashes at the top of the document)**
+
+1.  Add your name as the author of this document.
+
+2.  Render the document and fix any errors.
+
+## Task 9: Commit & Push & Issue
+
+- Refer back to the instructions on the course website to complete the assignment.

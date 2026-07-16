@@ -40,8 +40,8 @@ may_21_data <- read_csv(
 glimpse(may_21_data)
 ```
 
-
 ## Clean
+
 ```{r}
 #| echo: true
 

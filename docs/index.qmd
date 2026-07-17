@@ -159,47 +159,6 @@ ggplot(job_percent_data, aes(x = job_label, y = pct, fill = task)) +
 
 @fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of Job 2 (31 May) but under 15% of Job 3 (13 June), while Rest was rare on Job 2 (3%) yet accounted for over 40% of Job 3. The combined "All jobs" column, set apart with its own gap, averages this out to roughly 35% Earthworks, 31% Rest, 11% Extraction, 9% Fluidizing, 8% Equipment, 5% Communication and 1% Superstructure, which is a useful overall benchmark but masks how much the mix actually swings from one job to the next. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
 
-## Total time per task, job by job
-
-```{r}
-#| label: fig-task-totals-by-job
-#| fig-cap: "Total time spent on each task category, shown separately for each of the three ridealong jobs. Each task category has one point per job; colour and shape both encode the job so the figure stays readable for colour-blind viewers or in greyscale."
-
-job_dates <- sort(unique(as.character(gulper_data$job_date)))
-
-job_task_totals <- gulper_data %>%
-  mutate(job_date = as.character(job_date)) %>%
-  group_by(job_date, task) %>%
-  summarise(total_minutes = sum(duration_seconds) / 60, .groups = "drop") %>%
-  mutate(job_label = paste0("Job ", match(job_date, job_dates)))
-
-axis_upper_minutes <- ceiling(max(job_task_totals$total_minutes) / 30) * 30
-
-ggplot(
-  job_task_totals,
-  aes(
-    x = fct_reorder(task, total_minutes, .fun = median),
-    y = total_minutes,
-    colour = job_label,
-    shape = job_label
-  )
-) +
-  geom_point(size = 3, position = position_dodge(width = 0.5)) +
-  scale_colour_viridis_d() +
-  scale_shape_manual(values = c(16, 17, 15)) +
-  scale_y_continuous(breaks = seq(0, axis_upper_minutes, by = 30)) +
-  labs(
-    x = "Task category",
-    y = "Total time spent on task (minutes)",
-    colour = "Job",
-    shape = "Job",
-    title = "Total time per task, job by job"
-  ) +
-  theme_minimal()
-```
-
-@fig-task-totals-by-job shows that Earthworks time climbs fairly steadily across the three jobs (68, 76 and 119 minutes), while other tasks swing far more erratically: Rest jumps from about 5 minutes on Job 2 to over 180 minutes on Job 3, and both Extraction and Fluidizing are far higher on Job 2 than on Job 1. Some of this is simply because Job 3 was a much longer session overall, but the uneven scaling across tasks - Rest growing far more than Earthworks between jobs, for example - suggests that job length alone does not explain how gulpers' time gets allocated across task categories.
-
 ## Summary statistics
 
 ```{r}
@@ -229,7 +188,7 @@ kable(
 -   Earthworks and Rest jointly account for roughly two-thirds of all observed gulper time across the three sessions, more than the combined Extraction and Fluidizing tasks conventionally seen as the "productive" core of pit emptying.
 -   Task durations vary widely in both level and spread: Communication intervals are short and consistent, while Earthworks and Extraction are longer and more variable.
 -   For TDABC-based costing of gulper services, earthworks and rest/recovery time deserve as much attention as the extraction and fluidizing tasks traditionally treated as the core of the job.
--   Future work should link this task-duration data to labour cost-driver rates and job-level metadata to produce a complete per-job cost estimate.
+-   A natural next step would be to compare this task-duration data with how much money each job actually brings in (or pays the gulpers), to see whether jobs that take longer also earn more, and which specific tasks eat up time without adding much to a job's earnings.
 
 # References
 

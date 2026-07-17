@@ -159,58 +159,46 @@ ggplot(job_percent_data, aes(x = job_label, y = pct, fill = task)) +
 
 @fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of Job 2 (31 May) but under 15% of Job 3 (13 June), while Rest was rare on Job 2 (3%) yet accounted for over 40% of Job 3. The combined "All jobs" column, set apart with its own gap, averages this out to roughly 35% Earthworks, 31% Rest, 11% Extraction, 9% Fluidizing, 8% Equipment, 5% Communication and 1% Superstructure, which is a useful overall benchmark but masks how much the mix actually swings from one job to the next. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
 
-## Distribution of task durations
+## Total time per task, job by job
 
 ```{r}
-#| label: fig-duration-boxplot
-#| fig-cap: "Distribution of task durations by task category, shown as a traditional boxplot (box = interquartile range, thick line = median, whiskers extend to 1.5x the interquartile range). The y-axis is in minutes for readability; labels on each box give the exact median duration in seconds. A small number of extreme outliers (12 of 453 observations, mostly Earthworks) fall above the axis limit and are not shown, to keep the typical range readable; the full range is reported in @tbl-task-summary."
+#| label: fig-task-totals-by-job
+#| fig-cap: "Total time spent on each task category, shown separately for each of the three ridealong jobs. Each task category has one point per job; colour and shape both encode the job so the figure stays readable for colour-blind viewers or in greyscale."
 
-task_medians <- gulper_data %>%
-  group_by(task) %>%
-  summarise(median_sec = median(duration_seconds))
+job_dates <- sort(unique(as.character(gulper_data$job_date)))
 
-# cap the y-axis just above the widest whisker across tasks, rounded up to
-# the nearest whole minute, so a handful of extreme outliers don't compress
-# the readable range for every other task
-task_fences <- gulper_data %>%
-  group_by(task) %>%
-  summarise(
-    q1 = quantile(duration_seconds, 0.25),
-    q3 = quantile(duration_seconds, 0.75),
-    fence = q3 + 1.5 * (q3 - q1),
-    upper_whisker = max(duration_seconds[duration_seconds <= fence])
+job_task_totals <- gulper_data %>%
+  mutate(job_date = as.character(job_date)) %>%
+  group_by(job_date, task) %>%
+  summarise(total_minutes = sum(duration_seconds) / 60, .groups = "drop") %>%
+  mutate(job_label = paste0("Job ", match(job_date, job_dates)))
+
+axis_upper_minutes <- ceiling(max(job_task_totals$total_minutes) / 30) * 30
+
+ggplot(
+  job_task_totals,
+  aes(
+    x = fct_reorder(task, total_minutes, .fun = median),
+    y = total_minutes,
+    colour = job_label,
+    shape = job_label
   )
-
-axis_upper_seconds <- ceiling(max(task_fences$upper_whisker) / 60) * 60
-
-ggplot(gulper_data, aes(x = fct_reorder(task, duration_seconds, .fun = median), y = duration_seconds, fill = task)) +
-  geom_boxplot(show.legend = FALSE) +
-  geom_label(
-    data = task_medians,
-    aes(x = fct_reorder(task, median_sec), y = median_sec, label = paste0(round(median_sec), "s")),
-    inherit.aes = FALSE,
-    nudge_x = 0.42,
-    size = 3.8,
-    fontface = "bold",
-    label.size = 0.15,
-    fill = "white"
-  ) +
-  coord_cartesian(ylim = c(0, axis_upper_seconds)) +
-  scale_fill_viridis_d() +
-  scale_y_continuous(
-    breaks = seq(0, axis_upper_seconds, by = 60),
-    labels = function(x) x / 60,
-    expand = expansion(mult = c(0, 0.03))
-  ) +
+) +
+  geom_point(size = 3, position = position_dodge(width = 0.5)) +
+  scale_colour_viridis_d() +
+  scale_shape_manual(values = c(16, 17, 15)) +
+  scale_y_continuous(breaks = seq(0, axis_upper_minutes, by = 30)) +
   labs(
     x = "Task category",
-    y = "Duration (minutes)",
-    title = "Spread of task durations"
+    y = "Total time spent on task (minutes)",
+    colour = "Job",
+    shape = "Job",
+    title = "Total time per task, job by job"
   ) +
   theme_minimal()
 ```
 
-@fig-duration-boxplot shows the full spread of task durations rather than just a single summary bar: Earthworks and Extraction have both a high median and a wide interquartile range, while Communication is short with a narrow, tightly clustered range. Because the median line sits inside each box rather than at either end, it is clear the distributions are right-skewed, with each task's median well below the upper whisker. A handful of unusually long tasks (up to about 25 minutes for Earthworks) sit above the axis limit shown here; the full range, including those extremes, is reported in @tbl-task-summary.
+@fig-task-totals-by-job shows that Earthworks time climbs fairly steadily across the three jobs (68, 76 and 119 minutes), while other tasks swing far more erratically: Rest jumps from about 5 minutes on Job 2 to over 180 minutes on Job 3, and both Extraction and Fluidizing are far higher on Job 2 than on Job 1. Some of this is simply because Job 3 was a much longer session overall, but the uneven scaling across tasks - Rest growing far more than Earthworks between jobs, for example - suggests that job length alone does not explain how gulpers' time gets allocated across task categories.
 
 ## Summary statistics
 

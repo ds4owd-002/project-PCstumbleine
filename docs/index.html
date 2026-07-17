@@ -116,7 +116,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#time-by-task-category" id="toc-time-by-task-category" class="nav-link" data-scroll-target="#time-by-task-category">Time by task category</a></li>
   <li><a href="#share-of-job-time-by-task" id="toc-share-of-job-time-by-task" class="nav-link" data-scroll-target="#share-of-job-time-by-task">Share of job time by task</a></li>
-  <li><a href="#distribution-of-task-durations" id="toc-distribution-of-task-durations" class="nav-link" data-scroll-target="#distribution-of-task-durations">Distribution of task durations</a></li>
+  <li><a href="#total-time-per-task-job-by-job" id="toc-total-time-per-task-job-by-job" class="nav-link" data-scroll-target="#total-time-per-task-job-by-job">Total time per task, job by job</a></li>
   <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary statistics</a></li>
   </ul></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
@@ -327,66 +327,54 @@ Figure&nbsp;2: Percentage of each job’s total observed time spent on each task
 </div>
 <p><a href="#fig-task-share" class="quarto-xref">Figure&nbsp;2</a> shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of Job 2 (31 May) but under 15% of Job 3 (13 June), while Rest was rare on Job 2 (3%) yet accounted for over 40% of Job 3. The combined “All jobs” column, set apart with its own gap, averages this out to roughly 35% Earthworks, 31% Rest, 11% Extraction, 9% Fluidizing, 8% Equipment, 5% Communication and 1% Superstructure, which is a useful overall benchmark but masks how much the mix actually swings from one job to the next. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.</p>
 </section>
-<section id="distribution-of-task-durations" class="level2">
-<h2 class="anchored" data-anchor-id="distribution-of-task-durations">Distribution of task durations</h2>
+<section id="total-time-per-task-job-by-job" class="level2">
+<h2 class="anchored" data-anchor-id="total-time-per-task-job-by-job">Total time per task, job by job</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>task_medians <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(task) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">median_sec =</span> <span class="fu">median</span>(duration_seconds))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># cap the y-axis just above the widest whisker across tasks, rounded up to</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># the nearest whole minute, so a handful of extreme outliers don't compress</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># the readable range for every other task</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>task_fences <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(task) <span class="sc">%&gt;%</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">q1 =</span> <span class="fu">quantile</span>(duration_seconds, <span class="fl">0.25</span>),</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">q3 =</span> <span class="fu">quantile</span>(duration_seconds, <span class="fl">0.75</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">fence =</span> q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> (q3 <span class="sc">-</span> q1),</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper_whisker =</span> <span class="fu">max</span>(duration_seconds[duration_seconds <span class="sc">&lt;=</span> fence])</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>axis_upper_seconds <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">max</span>(task_fences<span class="sc">$</span>upper_whisker) <span class="sc">/</span> <span class="dv">60</span>) <span class="sc">*</span> <span class="dv">60</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gulper_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(task, duration_seconds, <span class="at">.fun =</span> median), <span class="at">y =</span> duration_seconds, <span class="at">fill =</span> task)) <span class="sc">+</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> task_medians,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(task, median_sec), <span class="at">y =</span> median_sec, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">round</span>(median_sec), <span class="st">"s"</span>)),</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">nudge_x =</span> <span class="fl">0.42</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.8</span>,</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">label.size =</span> <span class="fl">0.15</span>,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"white"</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>job_dates <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(<span class="fu">as.character</span>(gulper_data<span class="sc">$</span>job_date)))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>job_task_totals <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">job_date =</span> <span class="fu">as.character</span>(job_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(job_date, task) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_minutes =</span> <span class="fu">sum</span>(duration_seconds) <span class="sc">/</span> <span class="dv">60</span>, <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">job_label =</span> <span class="fu">paste0</span>(<span class="st">"Job "</span>, <span class="fu">match</span>(job_date, job_dates)))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>axis_upper_minutes <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="fu">max</span>(job_task_totals<span class="sc">$</span>total_minutes) <span class="sc">/</span> <span class="dv">30</span>) <span class="sc">*</span> <span class="dv">30</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  job_task_totals,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">fct_reorder</span>(task, total_minutes, <span class="at">.fun =</span> median),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> total_minutes,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> job_label,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> job_label</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">15</span>)) <span class="sc">+</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, axis_upper_minutes, <span class="at">by =</span> <span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Task category"</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total time spent on task (minutes)"</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"Job"</span>,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="st">"Job"</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Total time per task, job by job"</span></span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, axis_upper_seconds)) <span class="sc">+</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, axis_upper_seconds, <span class="at">by =</span> <span class="dv">60</span>),</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="cf">function</span>(x) x <span class="sc">/</span> <span class="dv">60</span>,</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.03</span>))</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Task category"</span>,</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Duration (minutes)"</span>,</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Spread of task durations"</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-duration-boxplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-task-totals-by-job" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-duration-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="index_files/figure-html/fig-duration-boxplot-1.png" class="img-fluid figure-img" width="672">
+<div aria-describedby="fig-task-totals-by-job-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-task-totals-by-job-1.png" class="img-fluid figure-img" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-duration-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Distribution of task durations by task category, shown as a traditional boxplot (box = interquartile range, thick line = median, whiskers extend to 1.5x the interquartile range). The y-axis is in minutes for readability; labels on each box give the exact median duration in seconds. A small number of extreme outliers (12 of 453 observations, mostly Earthworks) fall above the axis limit and are not shown, to keep the typical range readable; the full range is reported in <a href="#tbl-task-summary" class="quarto-xref">Table&nbsp;1</a>.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-task-totals-by-job-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Total time spent on each task category, shown separately for each of the three ridealong jobs. Each task category has one point per job; colour and shape both encode the job so the figure stays readable for colour-blind viewers or in greyscale.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><a href="#fig-duration-boxplot" class="quarto-xref">Figure&nbsp;3</a> shows the full spread of task durations rather than just a single summary bar: Earthworks and Extraction have both a high median and a wide interquartile range, while Communication is short with a narrow, tightly clustered range. Because the median line sits inside each box rather than at either end, it is clear the distributions are right-skewed, with each task’s median well below the upper whisker. A handful of unusually long tasks (up to about 25 minutes for Earthworks) sit above the axis limit shown here; the full range, including those extremes, is reported in <a href="#tbl-task-summary" class="quarto-xref">Table&nbsp;1</a>.</p>
+<p><a href="#fig-task-totals-by-job" class="quarto-xref">Figure&nbsp;3</a> shows that Earthworks time climbs fairly steadily across the three jobs (68, 76 and 119 minutes), while other tasks swing far more erratically: Rest jumps from about 5 minutes on Job 2 to over 180 minutes on Job 3, and both Extraction and Fluidizing are far higher on Job 2 than on Job 1. Some of this is simply because Job 3 was a much longer session overall, but the uneven scaling across tasks - Rest growing far more than Earthworks between jobs, for example - suggests that job length alone does not explain how gulpers’ time gets allocated across task categories.</p>
 </section>
 <section id="summary-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="summary-statistics">Summary statistics</h2>

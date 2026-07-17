@@ -109,9 +109,18 @@ ggplot(task_time, aes(x = fct_reorder(task, total_minutes), y = total_minutes, f
 
 ```{r}
 #| label: fig-task-share
-#| fig-cap: "Percentage of each job's total observed time spent on each task category, shown separately for the three ridealong sessions."
+#| fig-cap: "Percentage of each job's total observed time spent on each task category, shown for the three individual ridealong sessions plus a fourth 'All jobs' column combining all three."
 
-ggplot(gulper_data, aes(x = factor(job_date), y = duration_seconds, fill = task)) +
+job_labels <- gulper_data %>%
+  mutate(job_date = as.character(job_date))
+
+job_share_data <- bind_rows(
+  job_labels,
+  job_labels %>% mutate(job_date = "All jobs")
+) %>%
+  mutate(job_date = factor(job_date, levels = c(sort(unique(job_labels$job_date)), "All jobs")))
+
+ggplot(job_share_data, aes(x = job_date, y = duration_seconds, fill = task)) +
   geom_col(position = "fill") +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_viridis_d() +
@@ -124,31 +133,34 @@ ggplot(gulper_data, aes(x = factor(job_date), y = duration_seconds, fill = task)
   theme_minimal()
 ```
 
-@fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of the 31 May session but under 15% of the 13 June session, while Rest was rare on 31 May (3%) yet accounted for over 40% of the 13 June session. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
+@fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of the 31 May session but under 15% of the 13 June session, while Rest was rare on 31 May (3%) yet accounted for over 40% of the 13 June session. The combined "All jobs" column averages this out to roughly 35% Earthworks, 31% Rest, 11% Extraction, 9% Fluidizing, 8% Equipment, 5% Communication and 1% Superstructure, which is a useful overall benchmark but masks how much the mix actually swings from one job to the next. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
 
-## Distribution of task-interval durations
+## Typical duration by task
 
 ```{r}
-#| label: fig-duration-distribution
-#| fig-cap: "Distribution of individual task-interval durations by task category, on a log scale. An interval is one continuous row of the raw data: the length of time a single gulper spent on one subtask before switching to a different subtask or task."
+#| label: fig-typical-duration
+#| fig-cap: "Median duration of a task interval, by task category, on an ordinary (linear) scale. Bars are labelled with the exact median duration in seconds."
 
-ggplot(
-  gulper_data,
-  aes(x = fct_reorder(task, duration_seconds, .fun = median), y = duration_seconds, fill = task)
-) +
-  geom_boxplot(show.legend = FALSE) +
-  scale_y_log10() +
-  scale_fill_brewer(palette = "Set2") +
-  coord_flip() +
+task_duration_typical <- gulper_data %>%
+  group_by(task) %>%
+  summarise(median_sec = median(duration_seconds)) %>%
+  arrange(desc(median_sec))
+
+ggplot(task_duration_typical, aes(x = fct_reorder(task, median_sec), y = median_sec, fill = task)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = paste0(round(median_sec), "s")), hjust = -0.15, size = 3.5) +
+  coord_flip(clip = "off") +
+  scale_fill_viridis_d() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
   labs(
     x = "Task category",
-    y = "Duration of a single task interval, in seconds (log scale)",
-    title = "Spread of task-interval durations"
+    y = "Median task-interval duration (seconds)",
+    title = "How long a typical interval of each task takes"
   ) +
   theme_minimal()
 ```
 
-@fig-duration-distribution shows that Earthworks combines both a high total and a high median interval duration, while Communication intervals are consistently short with little spread. Rest and Extraction show the widest spread on the log scale, indicating that some individual rest or extraction intervals run far longer than a typical interval of that type.
+@fig-typical-duration shows on an ordinary linear scale just how much longer a typical Earthworks interval is than a typical Communication interval: about 98 seconds versus roughly 15 seconds, a roughly six-fold difference that a log scale can visually understate. Median rather than mean duration is plotted here because a handful of unusually long intervals (up to about 25 minutes for Earthworks) would otherwise pull the bars up and obscure the typical case; the full spread, including those outliers, is reported in @tbl-task-summary.
 
 ## Summary statistics
 

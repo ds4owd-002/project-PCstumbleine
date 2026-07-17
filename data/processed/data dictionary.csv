@@ -1,0 +1,11 @@
+variable_name,description
+entry_number,Sequential number identifying the order of an interval within its job/session.
+gulper_id,Identifier for the individual gulper (informal pit latrine emptier) who performed the interval.
+task,"High-level phase of work observed (e.g. Earthworks, Equipment, Extraction, Fluidizing, Communication, Rest, Superstructure)."
+subtask,"Specific physical activity performed within the task phase (e.g. Dig trench, Fetching water, Removing sludge). Blank for tasks with no further breakdown (e.g. Rest)."
+entry_start_time,Clock time (HH:MM:SS) at which the interval began.
+entry_end_time,Clock time (HH:MM:SS) at which the interval ended.
+duration_seconds,Duration of the interval in seconds (entry_end_time minus entry_start_time).
+job_id,"Identifier linking the entry to its parent emptying job/session (date plus sequence number). Session-level metadata (date, location, enumerator) is stored separately and kept private."
+job_date,Date of the emptying job session, parsed from the leading date portion of job_id. Derived during data cleaning; not present in the raw files.
+source_file,Name of the raw CSV file the entry originated from. Derived during data cleaning to preserve provenance after combining sessions.

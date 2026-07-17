@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Padraic Casserly">
+<meta name="dcterms.date" content="2026-07-17">
 
-<title>index.qmd</title>
+<title>Where Does the Time Go? A Time-Driven Activity-Based Costing Analysis of Informal Pit Latrine Emptying in Mzuzu, Malawi</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -56,7 +57,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="index_files/libs/clipboard/clipboard.min.js"></script>
@@ -75,15 +96,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="quarto-light">
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#install-libraries" id="toc-install-libraries" class="nav-link" data-scroll-target="#install-libraries">Install libraries</a></li>
+  <li><a href="#import-and-combine" id="toc-import-and-combine" class="nav-link" data-scroll-target="#import-and-combine">Import and combine</a></li>
+  <li><a href="#save-processed-data" id="toc-save-processed-data" class="nav-link" data-scroll-target="#save-processed-data">Save processed data</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#time-by-task-category" id="toc-time-by-task-category" class="nav-link" data-scroll-target="#time-by-task-category">Time by task category</a></li>
+  <li><a href="#distribution-of-interval-durations" id="toc-distribution-of-interval-durations" class="nav-link" data-scroll-target="#distribution-of-interval-durations">Distribution of interval durations</a></li>
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary statistics</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">index.qmd</h1>
+<h1 class="title">Where Does the Time Go? A Time-Driven Activity-Based Costing Analysis of Informal Pit Latrine Emptying in Mzuzu, Malawi</h1>
 </div>
 
 
@@ -97,6 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 17, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -106,32 +155,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="project-description" class="level2">
-<h2 class="anchored" data-anchor-id="project-description">Project Description</h2>
-<p>The data collected for this project contain time duration and task information from a Time-Driven Activity-Based Costing (TDABC) study of informal pit latrine emptying services in Mzuzu, Malawi, conducted as part of doctoral research at ETH Zürich. TDABC is a costing methodology that estimates the operational cost of a service by decomposing it into the discrete tasks performed, measuring how long each task takes in practice, and then multiplying those observed durations by appropriate cost-driver rates (such as labour cost per unit time). Unlike traditional activity-based costing, which estimates time allocations through interviews or assumptions, TDABC relies on direct observation, making accurate task-duration data the central empirical input to the cost model.</p>
-<p>The data was generated through structured ridealong observation in which an enumerator timed one or more “gulpers” (informal pit latrine emptiers) working in parallel on a single emptying job, using a custom-built mobile data collection tool that recorded the start and end of each task interval as gulpers moved through the job. Each row represents one continuous interval during which a single gulper was performing a single subtask: for example, a gulper might spend 92 seconds <em>fetching water</em> during the <em>Fluidizing</em> task (i.e., bringing water to the pit so that hardened sludge can be loosened), then 215 seconds <em>removing sludge</em> under <em>Extraction</em> (manually scooping sludge out of the pit), then 38 seconds in <em>Container transport</em> under <em>Sludge Handling</em> (moving the filled container to the truck). Higher-level tasks describe broad phases of the work — <em>Earthworks</em> (digging access trenches, cutting and later repairing the pit liner), <em>Equipment</em> (maneuvering, cleaning, and repairing tools and containers), <em>Communication</em> (with the client or between gulpers), <em>Travel</em> (to the disposal site), and <em>Rest</em> — while subtasks decompose those phases into the specific physical activities observed in the field.</p>
-<p>The <code>gulper_id</code> and <code>entry_number</code> columns allow each interval to be attributed to a specific gulper and ordered within the session, and <code>job_id</code> links the entries to a parent session for which separately stored metadata (date, location, enumerator) is held privately.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Informal pit latrine emptying is a critical but under-studied link in faecal sludge management (FSM) chains across Sub-Saharan African cities, where a majority of urban residents rely on on-site sanitation and manual emptiers to keep pits usable <span class="citation" data-cites="diop2017dakar brands2022nairobi">(<a href="#ref-diop2017dakar" role="doc-biblioref">Diop and Mbéguéré 2017</a>; <a href="#ref-brands2022nairobi" role="doc-biblioref">Brands et al. 2022</a>)</span>. Understanding the true cost of these informal services requires accurate data on how emptiers actually spend their time, since existing cost estimates are often built on interviews or rough assumptions rather than direct observation. Time-Driven Activity-Based Costing (TDABC) addresses this gap by decomposing a service into discrete tasks, timing each one directly, and multiplying observed durations by cost-driver rates, an approach that has previously been applied to sanitation-adjacent processes such as compost production in Malawi <span class="citation" data-cites="yesaya2021plastics kaplan2004tdabc">(<a href="#ref-yesaya2021plastics" role="doc-biblioref">Yesaya, Mpanang’ombe, and Tilley 2021</a>; <a href="#ref-kaplan2004tdabc" role="doc-biblioref">Kaplan and Anderson 2004</a>)</span>. This report applies the same logic to a TDABC study of informal pit latrine emptying (“gulper”) services in Mzuzu, Malawi, conducted as part of doctoral research at ETH Zürich. Three ridealong observation sessions are combined into a single processed dataset here to characterise how gulpers’ time is distributed across the tasks that make up an emptying job.</p>
 </section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<p>Data were collected through structured ridealong observation, in which an enumerator timed one or more gulpers working in parallel on a single emptying job using a custom mobile data collection tool that logged the start and end of every task interval <span class="citation" data-cites="brands2022nairobi">(<a href="#ref-brands2022nairobi" role="doc-biblioref">Brands et al. 2022</a>)</span>. Each of the three raw session files records one row per interval: the gulper performing it, the high-level task and specific subtask, start and end clock times, duration in seconds, and a job identifier linking entries to their parent session. Because the collection tool pads each file with blank spacer rows and columns, the cleaning step below removes any column that is entirely missing and any row that is entirely missing before the three sessions are row-bound into a single combined dataset. Two columns are derived during cleaning, <code>job_date</code> (parsed from <code>job_id</code>) and <code>source_file</code>, to preserve session-level provenance, and the resulting analysis-ready dataset is written to <code>data/processed/processed_data.csv</code>.</p>
 <section id="install-libraries" class="level2">
-<h2 class="anchored" data-anchor-id="install-libraries">Install Libraries</h2>
+<h2 class="anchored" data-anchor-id="install-libraries">Install libraries</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="import" class="level2">
-<h2 class="anchored" data-anchor-id="import">Import</h2>
+<section id="import-and-combine" class="level2">
+<h2 class="anchored" data-anchor-id="import-and-combine">Import and combine</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Imports one of the datasets</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>may_21_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"/cloud/project/data/raw/2026-05-21_01.csv"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(may_21_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_dir <span class="ot">&lt;-</span> <span class="st">"/cloud/project/data/raw"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>raw_paths <span class="ot">&lt;-</span> <span class="fu">list.files</span>(raw_dir, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Imports and cleans one raw session file: drops spacer columns/rows and</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># tags the result with its source file and job date for provenance.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>read_and_clean <span class="ot">&lt;-</span> <span class="cf">function</span>(path) {</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(path, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.)))) <span class="sc">%&gt;%</span>                <span class="co"># remove empty columns</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="sc">!</span><span class="fu">is.na</span>(.))) <span class="sc">%&gt;%</span>       <span class="co"># remove empty rows</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">source_file =</span> <span class="fu">basename</span>(path),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">job_date =</span> <span class="fu">as.Date</span>(<span class="fu">str_extract</span>(job_id, <span class="st">"^</span><span class="sc">\\</span><span class="st">d{4}-</span><span class="sc">\\</span><span class="st">d{2}-</span><span class="sc">\\</span><span class="st">d{2}"</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>gulper_data <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(raw_paths, read_and_clean)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gulper_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 998
-Columns: 26
+<pre><code>Rows: 453
+Columns: 10
 $ entry_number     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…
 $ gulper_id        &lt;dbl&gt; 4, 23, 23, 23, 4, 23, 23, 4, 23, 4, 23, 4, 4, 4, 23, …
 $ task             &lt;chr&gt; "Earthworks", "Earthworks", "Rest", "Earthworks", "Re…
@@ -140,48 +201,205 @@ $ entry_start_time &lt;time&gt; 10:29:07, 10:29:27, 10:30:11, 10:31:55, 10:31:58
 $ entry_end_time   &lt;time&gt; 10:31:58, 10:30:11, 10:31:55, 10:32:25, 10:34:13, 10…
 $ duration_seconds &lt;dbl&gt; 171.3, 44.7, 103.4, 30.7, 134.2, 6.0, 130.3, 32.7, 7.…
 $ job_id           &lt;chr&gt; "2026-05-21_01", "2026-05-21_01", "2026-05-21_01", "2…
-$ ...9             &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...10            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...11            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...12            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...13            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...14            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...15            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...16            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...17            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...18            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...19            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...20            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...21            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...22            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...23            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...24            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...25            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
-$ ...26            &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</code></pre>
+$ source_file      &lt;chr&gt; "2026-05-21_01.csv", "2026-05-21_01.csv", "2026-05-21…
+$ job_date         &lt;date&gt; 2026-05-21, 2026-05-21, 2026-05-21, 2026-05-21, 2026…</code></pre>
 </div>
 </div>
 </section>
-<section id="clean" class="level2">
-<h2 class="anchored" data-anchor-id="clean">Clean</h2>
+<section id="save-processed-data" class="level2">
+<h2 class="anchored" data-anchor-id="save-processed-data">Save processed data</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Removes any spacer columns and rows filled with NA values</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"/cloud/project/data/processed"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>may_21_cleaned_data <span class="ot">&lt;-</span> may_21_data <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="sc">!</span><span class="fu">all</span>(<span class="fu">is.na</span>(.)))) <span class="sc">%&gt;%</span>   <span class="co"># remove empty columns</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="sc">!</span><span class="fu">is.na</span>(.)))  <span class="co"># remove fully empty rows</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(may_21_cleaned_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 121
-Columns: 8
-$ entry_number     &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…
-$ gulper_id        &lt;dbl&gt; 4, 23, 23, 23, 4, 23, 23, 4, 23, 4, 23, 4, 4, 4, 23, …
-$ task             &lt;chr&gt; "Earthworks", "Earthworks", "Rest", "Earthworks", "Re…
-$ subtask          &lt;chr&gt; "Dig trench", "Dig trench", NA, "Dig trench", NA, NA,…
-$ entry_start_time &lt;time&gt; 10:29:07, 10:29:27, 10:30:11, 10:31:55, 10:31:58, 10…
-$ entry_end_time   &lt;time&gt; 10:31:58, 10:30:11, 10:31:55, 10:32:25, 10:34:13, 10…
-$ duration_seconds &lt;dbl&gt; 171.3, 44.7, 103.4, 30.7, 134.2, 6.0, 130.3, 32.7, 7.…
-$ job_id           &lt;chr&gt; "2026-05-21_01", "2026-05-21_01", "2026-05-21_01", "2…</code></pre>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(gulper_data, <span class="st">"/cloud/project/data/processed/processed_data.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="time-by-task-category" class="level2">
+<h2 class="anchored" data-anchor-id="time-by-task-category">Time by task category</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>task_time <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(task) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_minutes =</span> <span class="fu">sum</span>(duration_seconds) <span class="sc">/</span> <span class="dv">60</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total_minutes))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(task_time, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(task, total_minutes), <span class="at">y =</span> total_minutes, <span class="at">fill =</span> task)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Task category"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total observed time (minutes)"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Where gulpers' time goes"</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-task-time" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-task-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-task-time-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-task-time-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Total observed time by task category, summed across all three ridealong sessions.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-task-time" class="quarto-xref">Figure&nbsp;1</a> shows that Earthworks and Rest together account for roughly two-thirds of all observed time, while Communication, Fluidizing, Equipment and Superstructure make up the remainder despite occurring more often as short interludes between other tasks. This suggests that trench-digging and idle recovery time, rather than the sludge-handling tasks most associated with “emptying,” are the largest time (and likely cost) drivers in a TDABC model of this service.</p>
+</section>
+<section id="distribution-of-interval-durations" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-interval-durations">Distribution of interval durations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  gulper_data,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(task, duration_seconds, <span class="at">.fun =</span> median), <span class="at">y =</span> duration_seconds, <span class="at">fill =</span> task)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Task category"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Interval duration in seconds (log scale)"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Spread of task durations"</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-duration-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-duration-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-duration-distribution-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-duration-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Distribution of individual interval durations by task category (log scale).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-duration-distribution" class="quarto-xref">Figure&nbsp;2</a> shows that Earthworks combines both a high total and a high median duration, while Communication intervals are consistently short with little spread. Rest and Extraction show the widest spread on the log scale, indicating that some individual rest or extraction intervals run far longer than a typical interval of that type.</p>
+</section>
+<section id="summary-statistics" class="level2">
+<h2 class="anchored" data-anchor-id="summary-statistics">Summary statistics</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>task_summary <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(task) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sec =</span> <span class="fu">round</span>(<span class="fu">mean</span>(duration_seconds), <span class="dv">1</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_sec =</span> <span class="fu">round</span>(<span class="fu">median</span>(duration_seconds), <span class="dv">1</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sec =</span> <span class="fu">round</span>(<span class="fu">sd</span>(duration_seconds), <span class="dv">1</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  task_summary,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Task"</span>, <span class="st">"N intervals"</span>, <span class="st">"Mean (s)"</span>, <span class="st">"Median (s)"</span>, <span class="st">"SD (s)"</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="tbl-task-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-task-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Summary statistics for interval duration (seconds) by task category.
+</figcaption>
+<div aria-describedby="tbl-task-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="do-not-create-environment cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: right;">N intervals</th>
+<th style="text-align: right;">Mean (s)</th>
+<th style="text-align: right;">Median (s)</th>
+<th style="text-align: right;">SD (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Rest</td>
+<td style="text-align: right;">131</td>
+<td style="text-align: right;">106.7</td>
+<td style="text-align: right;">50.3</td>
+<td style="text-align: right;">133.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Communication</td>
+<td style="text-align: right;">93</td>
+<td style="text-align: right;">25.1</td>
+<td style="text-align: right;">15.4</td>
+<td style="text-align: right;">23.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Earthworks</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">190.1</td>
+<td style="text-align: right;">98.1</td>
+<td style="text-align: right;">238.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Equipment</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">75.6</td>
+<td style="text-align: right;">27.6</td>
+<td style="text-align: right;">121.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fluidizing</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">80.8</td>
+<td style="text-align: right;">62.2</td>
+<td style="text-align: right;">71.7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Extraction</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">129.2</td>
+<td style="text-align: right;">75.8</td>
+<td style="text-align: right;">140.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Superstructure</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">32.6</td>
+<td style="text-align: right;">18.4</td>
+<td style="text-align: right;">33.4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><a href="#tbl-task-summary" class="quarto-xref">Table&nbsp;1</a> confirms these patterns numerically: Earthworks has one of the highest mean durations among frequently observed tasks, while Communication is both frequent and brief. The standard deviations show that duration variability, and not just central tendency, differs markedly by task, which matters for setting realistic per-task cost-driver rates in a full TDABC costing model.</p>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<ul>
+<li>Earthworks and Rest jointly account for roughly two-thirds of all observed gulper time across the three sessions, more than the combined Extraction and Fluidizing tasks conventionally seen as the “productive” core of pit emptying.</li>
+<li>Task durations vary widely in both level and spread: Communication intervals are short and consistent, while Earthworks and Extraction are longer and more variable.</li>
+<li>Individual gulpers differ substantially in both how often and how long they were observed working, pointing to real variation in work allocation across a single job.</li>
+<li>For TDABC-based costing of gulper services, earthworks and rest/recovery time deserve as much attention as the extraction and fluidizing tasks traditionally treated as the core of the job.</li>
+<li>Future work should link this task-duration data to labour cost-driver rates and job-level metadata to produce a complete per-job cost estimate.</li>
+</ul>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-brands2022nairobi" class="csl-entry" role="listitem">
+Brands, Jordan, Leandra Rhodes-Dicker, Wali Mwalugongo, Ruthie Rosenberg, Lindsay Stradley, and David Auerbach. 2022. <span>“Improving Management of Manually Emptied Pit Latrine Waste in Nairobi’s Urban Informal Settlements.”</span> <em>Waterlines</em> 41 (1): 35–50. <a href="https://doi.org/10.3362/1756-3488.20-00003OA">https://doi.org/10.3362/1756-3488.20-00003OA</a>.
+</div>
+<div id="ref-diop2017dakar" class="csl-entry" role="listitem">
+Diop, Becaye Sidy, and Mbaye Mbéguéré. 2017. <span>“Dakar: Organising the Faecal Sludge Market.”</span> FSM Innovation Case Study.
+</div>
+<div id="ref-kaplan2004tdabc" class="csl-entry" role="listitem">
+Kaplan, Robert S., and Steven R. Anderson. 2004. <span>“Time-Driven Activity-Based Costing.”</span> <em>Harvard Business Review</em> 82 (11): 131–38.
+</div>
+<div id="ref-yesaya2021plastics" class="csl-entry" role="listitem">
+Yesaya, Mabvuto, Wrixon Mpanang’ombe, and Elizabeth Tilley. 2021. <span>“The Cost of Plastics in Compost.”</span> <em>Frontiers in Sustainability</em> 2: 753413. <a href="https://doi.org/10.3389/frsus.2021.753413">https://doi.org/10.3389/frsus.2021.753413</a>.
 </div>
 </div>
 </section>

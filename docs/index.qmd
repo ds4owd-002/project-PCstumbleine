@@ -20,7 +20,19 @@ Informal pit latrine emptying is a critical but under-studied link in faecal slu
 
 # Methods
 
-Data were collected through structured ridealong observation, in which an enumerator timed one or more gulpers working in parallel on a single emptying job using a custom mobile data collection tool that logged the start and end of every task interval [@brands2022nairobi]. Each of the three raw session files records one row per interval: the gulper performing it, the high-level task and specific subtask, start and end clock times, duration in seconds, and a job identifier linking entries to their parent session. Because the collection tool pads each file with blank spacer rows and columns, the cleaning step below removes any column that is entirely missing and any row that is entirely missing before the three sessions are row-bound into a single combined dataset. Two columns are derived during cleaning, `job_date` (parsed from `job_id`) and `source_file`, to preserve session-level provenance, and the resulting analysis-ready dataset is written to `data/processed/processed_data.csv`.
+Data were collected through structured ridealong observation, in which an enumerator timed one or more gulpers working in parallel on a single emptying job using a custom mobile data collection tool that logged the start and end of every interval. Here, an *interval* refers to one continuous row in the raw data: the length of time a single gulper spent on one subtask, from the moment they started it until they switched to a different subtask or task. Each of the three raw session files therefore records one row per interval: the gulper performing it, the high-level task and specific subtask, start and end clock times, duration in seconds, and a job identifier linking entries to their parent session. Because the collection tool pads each file with blank spacer rows and columns, the cleaning step below removes any column that is entirely missing and any row that is entirely missing before the three sessions are row-bound into a single combined dataset. Two columns are derived during cleaning, `job_date` (parsed from `job_id`) and `source_file`, to preserve session-level provenance, and the resulting analysis-ready dataset is written to `data/processed/processed_data.csv`.
+
+## Task and subtask categories
+
+The raw data organise every observed interval under one of seven high-level **tasks**, most of which are broken down into more specific **subtasks**:
+
+-   **Earthworks** — physical work on the pit itself: digging a trench, filling the trench back in, cutting a hole in the pit liner, and repairing the liner afterward.
+-   **Fluidizing** — preparing the sludge for removal by adding water: fetching water, adding it to the pit, and mixing it in.
+-   **Extraction** — the core removal step: manually removing sludge from the pit and pulling out solid trash mixed in with it.
+-   **Equipment** — handling tools and containers: maneuvering them into position, cleaning them, and occasional repairs.
+-   **Superstructure** — work on the latrine structure above the pit: inspection, with occasional cleaning or repair.
+-   **Communication** — coordination talk, either with the client or between gulpers on site.
+-   **Rest** — recovery breaks between other tasks; recorded as a single undifferentiated category with no subtask breakdown.
 
 ## Install libraries
 
@@ -93,11 +105,32 @@ ggplot(task_time, aes(x = fct_reorder(task, total_minutes), y = total_minutes, f
 
 @fig-task-time shows that Earthworks and Rest together account for roughly two-thirds of all observed time, while Communication, Fluidizing, Equipment and Superstructure make up the remainder despite occurring more often as short interludes between other tasks. This suggests that trench-digging and idle recovery time, rather than the sludge-handling tasks most associated with "emptying," are the largest time (and likely cost) drivers in a TDABC model of this service.
 
-## Distribution of interval durations
+## Share of job time by task
+
+```{r}
+#| label: fig-task-share
+#| fig-cap: "Percentage of each job's total observed time spent on each task category, shown separately for the three ridealong sessions."
+
+ggplot(gulper_data, aes(x = factor(job_date), y = duration_seconds, fill = task)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_viridis_d() +
+  labs(
+    x = "Job (session date)",
+    y = "Share of job time",
+    fill = "Task category",
+    title = "How a job's time breaks down, task by task"
+  ) +
+  theme_minimal()
+```
+
+@fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of the 31 May session but under 15% of the 13 June session, while Rest was rare on 31 May (3%) yet accounted for over 40% of the 13 June session. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
+
+## Distribution of task-interval durations
 
 ```{r}
 #| label: fig-duration-distribution
-#| fig-cap: "Distribution of individual interval durations by task category (log scale)."
+#| fig-cap: "Distribution of individual task-interval durations by task category, on a log scale. An interval is one continuous row of the raw data: the length of time a single gulper spent on one subtask before switching to a different subtask or task."
 
 ggplot(
   gulper_data,
@@ -109,19 +142,19 @@ ggplot(
   coord_flip() +
   labs(
     x = "Task category",
-    y = "Interval duration in seconds (log scale)",
-    title = "Spread of task durations"
+    y = "Duration of a single task interval, in seconds (log scale)",
+    title = "Spread of task-interval durations"
   ) +
   theme_minimal()
 ```
 
-@fig-duration-distribution shows that Earthworks combines both a high total and a high median duration, while Communication intervals are consistently short with little spread. Rest and Extraction show the widest spread on the log scale, indicating that some individual rest or extraction intervals run far longer than a typical interval of that type.
+@fig-duration-distribution shows that Earthworks combines both a high total and a high median interval duration, while Communication intervals are consistently short with little spread. Rest and Extraction show the widest spread on the log scale, indicating that some individual rest or extraction intervals run far longer than a typical interval of that type.
 
 ## Summary statistics
 
 ```{r}
 #| label: tbl-task-summary
-#| tbl-cap: "Summary statistics for interval duration (seconds) by task category."
+#| tbl-cap: "Summary statistics for task-interval duration (seconds) by task category."
 
 task_summary <- gulper_data %>%
   group_by(task) %>%

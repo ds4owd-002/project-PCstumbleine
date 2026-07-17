@@ -107,6 +107,7 @@ div.csl-indent {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
   <ul class="collapse">
+  <li><a href="#task-and-subtask-categories" id="toc-task-and-subtask-categories" class="nav-link" data-scroll-target="#task-and-subtask-categories">Task and subtask categories</a></li>
   <li><a href="#install-libraries" id="toc-install-libraries" class="nav-link" data-scroll-target="#install-libraries">Install libraries</a></li>
   <li><a href="#import-and-combine" id="toc-import-and-combine" class="nav-link" data-scroll-target="#import-and-combine">Import and combine</a></li>
   <li><a href="#save-processed-data" id="toc-save-processed-data" class="nav-link" data-scroll-target="#save-processed-data">Save processed data</a></li>
@@ -114,7 +115,8 @@ div.csl-indent {
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
   <li><a href="#time-by-task-category" id="toc-time-by-task-category" class="nav-link" data-scroll-target="#time-by-task-category">Time by task category</a></li>
-  <li><a href="#distribution-of-interval-durations" id="toc-distribution-of-interval-durations" class="nav-link" data-scroll-target="#distribution-of-interval-durations">Distribution of interval durations</a></li>
+  <li><a href="#share-of-job-time-by-task" id="toc-share-of-job-time-by-task" class="nav-link" data-scroll-target="#share-of-job-time-by-task">Share of job time by task</a></li>
+  <li><a href="#distribution-of-task-interval-durations" id="toc-distribution-of-task-interval-durations" class="nav-link" data-scroll-target="#distribution-of-task-interval-durations">Distribution of task-interval durations</a></li>
   <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics">Summary statistics</a></li>
   </ul></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
@@ -161,7 +163,20 @@ div.csl-indent {
 </section>
 <section id="methods" class="level1">
 <h1>Methods</h1>
-<p>Data were collected through structured ridealong observation, in which an enumerator timed one or more gulpers working in parallel on a single emptying job using a custom mobile data collection tool that logged the start and end of every task interval <span class="citation" data-cites="brands2022nairobi">(<a href="#ref-brands2022nairobi" role="doc-biblioref">Brands et al. 2022</a>)</span>. Each of the three raw session files records one row per interval: the gulper performing it, the high-level task and specific subtask, start and end clock times, duration in seconds, and a job identifier linking entries to their parent session. Because the collection tool pads each file with blank spacer rows and columns, the cleaning step below removes any column that is entirely missing and any row that is entirely missing before the three sessions are row-bound into a single combined dataset. Two columns are derived during cleaning, <code>job_date</code> (parsed from <code>job_id</code>) and <code>source_file</code>, to preserve session-level provenance, and the resulting analysis-ready dataset is written to <code>data/processed/processed_data.csv</code>.</p>
+<p>Data were collected through structured ridealong observation, in which an enumerator timed one or more gulpers working in parallel on a single emptying job using a custom mobile data collection tool that logged the start and end of every interval. Here, an <em>interval</em> refers to one continuous row in the raw data: the length of time a single gulper spent on one subtask, from the moment they started it until they switched to a different subtask or task. Each of the three raw session files therefore records one row per interval: the gulper performing it, the high-level task and specific subtask, start and end clock times, duration in seconds, and a job identifier linking entries to their parent session. Because the collection tool pads each file with blank spacer rows and columns, the cleaning step below removes any column that is entirely missing and any row that is entirely missing before the three sessions are row-bound into a single combined dataset. Two columns are derived during cleaning, <code>job_date</code> (parsed from <code>job_id</code>) and <code>source_file</code>, to preserve session-level provenance, and the resulting analysis-ready dataset is written to <code>data/processed/processed_data.csv</code>.</p>
+<section id="task-and-subtask-categories" class="level2">
+<h2 class="anchored" data-anchor-id="task-and-subtask-categories">Task and subtask categories</h2>
+<p>The raw data organise every observed interval under one of seven high-level <strong>tasks</strong>, most of which are broken down into more specific <strong>subtasks</strong>:</p>
+<ul>
+<li><strong>Earthworks</strong> — physical work on the pit itself: digging a trench, filling the trench back in, cutting a hole in the pit liner, and repairing the liner afterward.</li>
+<li><strong>Fluidizing</strong> — preparing the sludge for removal by adding water: fetching water, adding it to the pit, and mixing it in.</li>
+<li><strong>Extraction</strong> — the core removal step: manually removing sludge from the pit and pulling out solid trash mixed in with it.</li>
+<li><strong>Equipment</strong> — handling tools and containers: maneuvering them into position, cleaning them, and occasional repairs.</li>
+<li><strong>Superstructure</strong> — work on the latrine structure above the pit: inspection, with occasional cleaning or repair.</li>
+<li><strong>Communication</strong> — coordination talk, either with the client or between gulpers on site.</li>
+<li><strong>Rest</strong> — recovery breaks between other tasks; recorded as a single undifferentiated category with no subtask breakdown.</li>
+</ul>
+</section>
 <section id="install-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="install-libraries">Install libraries</h2>
 <div class="cell">
@@ -250,23 +265,52 @@ Figure&nbsp;1: Total observed time by task category, summed across all three rid
 </div>
 <p><a href="#fig-task-time" class="quarto-xref">Figure&nbsp;1</a> shows that Earthworks and Rest together account for roughly two-thirds of all observed time, while Communication, Fluidizing, Equipment and Superstructure make up the remainder despite occurring more often as short interludes between other tasks. This suggests that trench-digging and idle recovery time, rather than the sludge-handling tasks most associated with “emptying,” are the largest time (and likely cost) drivers in a TDABC model of this service.</p>
 </section>
-<section id="distribution-of-interval-durations" class="level2">
-<h2 class="anchored" data-anchor-id="distribution-of-interval-durations">Distribution of interval durations</h2>
+<section id="share-of-job-time-by-task" class="level2">
+<h2 class="anchored" data-anchor-id="share-of-job-time-by-task">Share of job time by task</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  gulper_data,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(task, duration_seconds, <span class="at">.fun =</span> median), <span class="at">y =</span> duration_seconds, <span class="at">fill =</span> task)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Task category"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Interval duration in seconds (log scale)"</span>,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Spread of task durations"</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gulper_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(job_date), <span class="at">y =</span> duration_seconds, <span class="at">fill =</span> task)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Job (session date)"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Share of job time"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Task category"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"How a job's time breaks down, task by task"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-task-share" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-task-share-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-task-share-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-task-share-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Percentage of each job’s total observed time spent on each task category, shown separately for the three ridealong sessions.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-task-share" class="quarto-xref">Figure&nbsp;2</a> shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of the 31 May session but under 15% of the 13 June session, while Rest was rare on 31 May (3%) yet accounted for over 40% of the 13 June session. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.</p>
+</section>
+<section id="distribution-of-task-interval-durations" class="level2">
+<h2 class="anchored" data-anchor-id="distribution-of-task-interval-durations">Distribution of task-interval durations</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  gulper_data,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(task, duration_seconds, <span class="at">.fun =</span> median), <span class="at">y =</span> duration_seconds, <span class="at">fill =</span> task)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Task category"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Duration of a single task interval, in seconds (log scale)"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Spread of task-interval durations"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-duration-distribution" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -274,35 +318,35 @@ Figure&nbsp;1: Total observed time by task category, summed across all three rid
 <img src="index_files/figure-html/fig-duration-distribution-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-duration-distribution-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Distribution of individual interval durations by task category (log scale).
+Figure&nbsp;3: Distribution of individual task-interval durations by task category, on a log scale. An interval is one continuous row of the raw data: the length of time a single gulper spent on one subtask before switching to a different subtask or task.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><a href="#fig-duration-distribution" class="quarto-xref">Figure&nbsp;2</a> shows that Earthworks combines both a high total and a high median duration, while Communication intervals are consistently short with little spread. Rest and Extraction show the widest spread on the log scale, indicating that some individual rest or extraction intervals run far longer than a typical interval of that type.</p>
+<p><a href="#fig-duration-distribution" class="quarto-xref">Figure&nbsp;3</a> shows that Earthworks combines both a high total and a high median interval duration, while Communication intervals are consistently short with little spread. Rest and Extraction show the widest spread on the log scale, indicating that some individual rest or extraction intervals run far longer than a typical interval of that type.</p>
 </section>
 <section id="summary-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="summary-statistics">Summary statistics</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>task_summary <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(task) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sec =</span> <span class="fu">round</span>(<span class="fu">mean</span>(duration_seconds), <span class="dv">1</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_sec =</span> <span class="fu">round</span>(<span class="fu">median</span>(duration_seconds), <span class="dv">1</span>),</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sec =</span> <span class="fu">round</span>(<span class="fu">sd</span>(duration_seconds), <span class="dv">1</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  task_summary,</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Task"</span>, <span class="st">"N intervals"</span>, <span class="st">"Mean (s)"</span>, <span class="st">"Median (s)"</span>, <span class="st">"SD (s)"</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>task_summary <span class="ot">&lt;-</span> gulper_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(task) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sec =</span> <span class="fu">round</span>(<span class="fu">mean</span>(duration_seconds), <span class="dv">1</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">median_sec =</span> <span class="fu">round</span>(<span class="fu">median</span>(duration_seconds), <span class="dv">1</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sec =</span> <span class="fu">round</span>(<span class="fu">sd</span>(duration_seconds), <span class="dv">1</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  task_summary,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Task"</span>, <span class="st">"N intervals"</span>, <span class="st">"Mean (s)"</span>, <span class="st">"Median (s)"</span>, <span class="st">"SD (s)"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div id="tbl-task-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-task-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Summary statistics for interval duration (seconds) by task category.
+Table&nbsp;1: Summary statistics for task-interval duration (seconds) by task category.
 </figcaption>
 <div aria-describedby="tbl-task-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">

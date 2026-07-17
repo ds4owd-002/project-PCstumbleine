@@ -91,10 +91,13 @@ task_time <- gulper_data %>%
   summarise(total_minutes = sum(duration_seconds) / 60) %>%
   arrange(desc(total_minutes))
 
+max_axis_minutes <- ceiling(max(task_time$total_minutes) / 30) * 30
+
 ggplot(task_time, aes(x = fct_reorder(task, total_minutes), y = total_minutes, fill = task)) +
   geom_col(show.legend = FALSE) +
   coord_flip() +
   scale_fill_viridis_d() +
+  scale_y_continuous(breaks = seq(0, max_axis_minutes, by = 30)) +
   labs(
     x = "Task category",
     y = "Total observed time (minutes)",
@@ -109,23 +112,42 @@ ggplot(task_time, aes(x = fct_reorder(task, total_minutes), y = total_minutes, f
 
 ```{r}
 #| label: fig-task-share
-#| fig-cap: "Percentage of each job's total observed time spent on each task category, shown for the three individual ridealong sessions plus a fourth 'All jobs' column combining all three."
+#| fig-cap: "Percentage of each job's total observed time spent on each task category, for the three individual ridealong sessions (Job 1-3, labelled with their session dates) plus a combined 'All jobs' column, separated by a gap from the individual jobs. Segment labels give the exact percentage for shares of 4% or more."
 
-job_labels <- gulper_data %>%
-  mutate(job_date = as.character(job_date))
+job_dates <- sort(unique(as.character(gulper_data$job_date)))
+job_tick_labels <- paste0("Job ", seq_along(job_dates), "\n", job_dates)
 
-job_share_data <- bind_rows(
-  job_labels,
-  job_labels %>% mutate(job_date = "All jobs")
+job_percent_data <- bind_rows(
+  gulper_data %>% mutate(job_date = as.character(job_date)),
+  gulper_data %>% mutate(job_date = "All jobs")
 ) %>%
-  mutate(job_date = factor(job_date, levels = c(sort(unique(job_labels$job_date)), "All jobs")))
+  group_by(job_date, task) %>%
+  summarise(total_seconds = sum(duration_seconds), .groups = "drop_last") %>%
+  mutate(pct = 100 * total_seconds / sum(total_seconds)) %>%
+  ungroup() %>%
+  mutate(
+    job_label = if_else(
+      job_date == "All jobs",
+      "All jobs",
+      job_tick_labels[match(job_date, job_dates)]
+    ),
+    # a blank, data-free level between "Job 3" and "All jobs" creates a visual gap
+    job_label = factor(job_label, levels = c(job_tick_labels, " ", "All jobs"))
+  )
 
-ggplot(job_share_data, aes(x = job_date, y = duration_seconds, fill = task)) +
-  geom_col(position = "fill") +
-  scale_y_continuous(labels = scales::percent) +
+ggplot(job_percent_data, aes(x = job_label, y = pct, fill = task)) +
+  geom_col() +
+  geom_text(
+    aes(label = if_else(pct >= 4, paste0(round(pct), "%"), "")),
+    position = position_stack(vjust = 0.5),
+    size = 3,
+    colour = "white"
+  ) +
+  scale_x_discrete(drop = FALSE) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
   scale_fill_viridis_d() +
   labs(
-    x = "Job (session date)",
+    x = "Job",
     y = "Share of job time",
     fill = "Task category",
     title = "How a job's time breaks down, task by task"
@@ -133,40 +155,45 @@ ggplot(job_share_data, aes(x = job_date, y = duration_seconds, fill = task)) +
   theme_minimal()
 ```
 
-@fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of the 31 May session but under 15% of the 13 June session, while Rest was rare on 31 May (3%) yet accounted for over 40% of the 13 June session. The combined "All jobs" column averages this out to roughly 35% Earthworks, 31% Rest, 11% Extraction, 9% Fluidizing, 8% Equipment, 5% Communication and 1% Superstructure, which is a useful overall benchmark but masks how much the mix actually swings from one job to the next. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
+@fig-task-share shows that Earthworks is the single largest share of every job (29-45%), but the balance of the rest of the time shifts a lot from job to job: Extraction and Fluidizing together used over 40% of Job 2 (31 May) but under 15% of Job 3 (13 June), while Rest was rare on Job 2 (3%) yet accounted for over 40% of Job 3. The combined "All jobs" column, set apart with its own gap, averages this out to roughly 35% Earthworks, 31% Rest, 11% Extraction, 9% Fluidizing, 8% Equipment, 5% Communication and 1% Superstructure, which is a useful overall benchmark but masks how much the mix actually swings from one job to the next. A single fixed cost-driver rate per task would therefore understate the cost of jobs with more digging and recovery time and overstate the cost of jobs dominated by fluidizing and extraction.
 
 ## Typical duration by task
 
 ```{r}
 #| label: fig-typical-duration
-#| fig-cap: "Median duration of a task interval, by task category, on an ordinary (linear) scale. Bars are labelled with the exact median duration in seconds."
+#| fig-cap: "Median duration by task category, on an ordinary (linear) scale. Error bars show the interquartile range (25th-75th percentile); bar labels give the exact median duration in seconds."
 
 task_duration_typical <- gulper_data %>%
   group_by(task) %>%
-  summarise(median_sec = median(duration_seconds)) %>%
+  summarise(
+    median_sec = median(duration_seconds),
+    q1_sec = quantile(duration_seconds, 0.25),
+    q3_sec = quantile(duration_seconds, 0.75)
+  ) %>%
   arrange(desc(median_sec))
 
 ggplot(task_duration_typical, aes(x = fct_reorder(task, median_sec), y = median_sec, fill = task)) +
   geom_col(show.legend = FALSE) +
-  geom_text(aes(label = paste0(round(median_sec), "s")), hjust = -0.15, size = 3.5) +
+  geom_errorbar(aes(ymin = q1_sec, ymax = q3_sec), width = 0.25) +
+  geom_text(aes(y = q3_sec, label = paste0(round(median_sec), "s")), hjust = -0.15, size = 3.5) +
   coord_flip(clip = "off") +
   scale_fill_viridis_d() +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.2))) +
   labs(
     x = "Task category",
-    y = "Median task-interval duration (seconds)",
-    title = "How long a typical interval of each task takes"
+    y = "Median duration (seconds)",
+    title = "How long a typical task takes"
   ) +
   theme_minimal()
 ```
 
-@fig-typical-duration shows on an ordinary linear scale just how much longer a typical Earthworks interval is than a typical Communication interval: about 98 seconds versus roughly 15 seconds, a roughly six-fold difference that a log scale can visually understate. Median rather than mean duration is plotted here because a handful of unusually long intervals (up to about 25 minutes for Earthworks) would otherwise pull the bars up and obscure the typical case; the full spread, including those outliers, is reported in @tbl-task-summary.
+@fig-typical-duration shows on an ordinary linear scale just how much longer a typical Earthworks task takes than a typical Communication task: about 98 seconds versus roughly 15 seconds, a roughly six-fold difference that a log scale can visually understate. The error bars show that Earthworks and Extraction also have the widest interquartile range, meaning individual instances of these tasks can deviate substantially from the typical duration, whereas Communication is both short and consistent. Median rather than mean duration is plotted here because a handful of unusually long tasks (up to about 25 minutes for Earthworks) would otherwise pull the bars up and obscure the typical case; the full spread, including those outliers, is reported in @tbl-task-summary.
 
 ## Summary statistics
 
 ```{r}
 #| label: tbl-task-summary
-#| tbl-cap: "Summary statistics for task-interval duration (seconds) by task category."
+#| tbl-cap: "Summary statistics for task duration (seconds) by task category."
 
 task_summary <- gulper_data %>%
   group_by(task) %>%
@@ -190,7 +217,6 @@ kable(
 
 -   Earthworks and Rest jointly account for roughly two-thirds of all observed gulper time across the three sessions, more than the combined Extraction and Fluidizing tasks conventionally seen as the "productive" core of pit emptying.
 -   Task durations vary widely in both level and spread: Communication intervals are short and consistent, while Earthworks and Extraction are longer and more variable.
--   Individual gulpers differ substantially in both how often and how long they were observed working, pointing to real variation in work allocation across a single job.
 -   For TDABC-based costing of gulper services, earthworks and rest/recovery time deserve as much attention as the extraction and fluidizing tasks traditionally treated as the core of the job.
 -   Future work should link this task-duration data to labour cost-driver rates and job-level metadata to produce a complete per-job cost estimate.
 

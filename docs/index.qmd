@@ -41,6 +41,8 @@ The raw data organise every observed interval under one of seven high-level **ta
 
 library(tidyverse)
 library(knitr)
+library(here)
+here::i_am("docs/index.qmd")
 ```
 
 ## Import and combine
@@ -48,7 +50,7 @@ library(knitr)
 ```{r}
 #| label: import-data
 
-raw_dir <- "/cloud/project/data/raw"
+raw_dir <- here("data", "raw")
 raw_paths <- list.files(raw_dir, pattern = "\\.csv$", full.names = TRUE)
 
 # Imports and cleans one raw session file: drops spacer columns/rows and
@@ -73,9 +75,9 @@ glimpse(gulper_data)
 ```{r}
 #| label: save-processed
 
-dir.create("/cloud/project/data/processed", showWarnings = FALSE)
+dir.create(here("data", "processed"), showWarnings = FALSE)
 
-write_csv(gulper_data, "/cloud/project/data/processed/processed_data.csv")
+write_csv(gulper_data, here("data", "processed", "processed_data.csv"))
 ```
 
 # Results
